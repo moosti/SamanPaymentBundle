@@ -1,0 +1,32 @@
+{
+  "name": "ericomgroup/saman-payment-bundle",
+  "type": "symfony-bundle",
+  "description": "A bundle for handle payments with saman electronic payments",
+  "keywords": ["saman-payment", "sep", "payment", "php", "symfony"],
+  "homepage": "http://ericomgroup.com",
+  "minimum-stability": "dev",
+  "prefer-stable": true,
+  "version": "1.0.0",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Mostafa Ispareh",
+      "email": "ispareh@eriomgroup.com",
+      "homepage": "http://ericomgroup.com",
+      "role": "Developer"
+    },
+    {
+      "name": "Alireza Seddighi",
+      "email": "seddighi@eriomgroup.com",
+      "homepage": "http://ericomgroup.com",
+      "role": "Developer"
+    }
+  ],
+  "require": {
+    "php": ">=7.1",
+    "symfony/framework-bundle": "^3.4"
+  },
+  "autoload": {
+    "psr-4": { "EricomGroup\\SamanPaymentBundle\\": "" }
+  }
+}
