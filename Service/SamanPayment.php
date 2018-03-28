@@ -19,10 +19,12 @@ class SamanPayment
 	private $merchantId;
 	private $password;
 	private $bankRate;
-	public $redirectUrl = '';
-	public $totalAmount;
-	public $paymentId;
-	public $transactionId;
+	private $isAutoSubmit = false;
+	private $submitText = 'پرداخت';
+	private $redirectUrl = '';
+	private $totalAmount;
+	private $paymentId;
+	private $transactionId;
 	public $errors;
 	private $stateErrors = [
 		'Canceled By User'     => 'تراکنش بوسیله خریدار کنسل شده',
@@ -70,14 +72,6 @@ class SamanPayment
 	}
 
 	/**
-	 * @return mixed
-	 */
-	public function getMerchantId()
-	{
-		return $this->merchantId;
-	}
-
-	/**
 	 * @param mixed $merchantId
 	 * @return SamanPayment
 	 */
@@ -88,14 +82,6 @@ class SamanPayment
 	}
 
 	/**
-	 * @return mixed
-	 */
-	public function getPassword()
-	{
-		return $this->password;
-	}
-
-	/**
 	 * @param mixed $password
 	 * @return SamanPayment
 	 */
@@ -103,14 +89,6 @@ class SamanPayment
 	{
 		$this->password = $password;
 		return $this;
-	}
-
-	/**
-	 * @return mixed
-	 */
-	public function getBankRate()
-	{
-		return $this->bankRate;
 	}
 
 	/**
@@ -129,6 +107,66 @@ class SamanPayment
 	public function getErrors()
 	{
 		return $this->errors;
+	}
+
+	/**
+	 * @param bool $isAutoSubmit
+	 * @return SamanPayment
+	 */
+	public function setIsAutoSubmit($isAutoSubmit)
+	{
+		$this->isAutoSubmit = $isAutoSubmit;
+		return $this;
+	}
+
+	/**
+	 * @param string $submitText
+	 * @return SamanPayment
+	 */
+	public function setSubmitText($submitText)
+	{
+		$this->submitText = $submitText;
+		return $this;
+	}
+
+	/**
+	 * @param string $redirectUrl
+	 * @return SamanPayment
+	 */
+	public function setRedirectUrl($redirectUrl)
+	{
+		$this->redirectUrl = $redirectUrl;
+		return $this;
+	}
+
+	/**
+	 * @param mixed $totalAmount
+	 * @return SamanPayment
+	 */
+	public function setTotalAmount($totalAmount)
+	{
+		$this->totalAmount = $totalAmount;
+		return $this;
+	}
+
+	/**
+	 * @param mixed $paymentId
+	 * @return SamanPayment
+	 */
+	public function setPaymentId($paymentId)
+	{
+		$this->paymentId = $paymentId;
+		return $this;
+	}
+
+	/**
+	 * @param mixed $transactionId
+	 * @return SamanPayment
+	 */
+	public function setTransactionId($transactionId)
+	{
+		$this->transactionId = $transactionId;
+		return $this;
 	}
 
 
@@ -184,5 +222,18 @@ class SamanPayment
 			}
 		}
 		return $result;
+	}
+
+	public function getFormParam()
+	{
+		return [
+			'merchantId' => $this->merchantId,
+			'amount' => $this->totalAmount * $this->bankRate,
+			'action' => SamanPayment::FORM_ACTION,
+			'redirectUrl' => $this->redirectUrl,
+			'resNum' => $this->paymentId,
+			'autoSubmit' => $this->isAutoSubmit,
+			'submitText' => $this->submitText
+		];
 	}
 }

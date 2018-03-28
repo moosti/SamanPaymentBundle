@@ -1,0 +1,18 @@
+<form action="{{ payment.action }}" method="post" enctype="application/x-www-form-urlencoded" name="payment_form">
+    <input type="hidden" name="ResNum" value="{{ payment.resNum }}" />
+    <input type="hidden" name="MID" value="{{ payment.merchantId }}" />
+    <input type="hidden" name="RedirectURL" value="{{ payment.redirectUrl }}" />
+    <input type="hidden" name="Amount" value="{{ payment.amount }}" />
+    {% if payment.autoSubmit %}
+        <script>
+            window.onload = function(){
+                document.forms['payment_form'].submit();
+            }
+        </script>
+    {% else %}
+        <button type="submit" class="btn btn-lg btn-block btn-danger">
+            <i class="fa fa-trash" aria-hidden="true"></i>
+            {{ payment.submitText }}
+        </button>
+    {% endif %}
+</form>
