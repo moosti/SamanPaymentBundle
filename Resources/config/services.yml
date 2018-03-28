@@ -1,0 +1,5 @@
+services:
+    saman_payment:
+        class: EricomGroup\SamanPaymentBundle\Service\SamanPayment
+        arguments: ["@service_container"]
+        public: true
