@@ -1,4 +1,4 @@
-# SamanPaymentBundle
+SamanPaymentBundle
 ===================
 A symfony wrapper bundle for  [Saman Electeronic Payment](http://www.sep.ir/en/).
 
