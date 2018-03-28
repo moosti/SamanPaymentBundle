@@ -1,8 +1,5 @@
 # SamanPaymentBundle
 ===================
-[![Packagist](https://img.shields.io/packagist/dt/doctrine/orm.svg)](https://packagist.org/packages/ericomgroup/telegram-bot-api-bundle)
-[![license](https://img.shields.io/github/license/mashape/apistatus.svg)](https://github.com/ericomgroup/SamanPaymentBundle/blob/master/LICENSE.md)
-
 A symfony wrapper bundle for  [Saman Electeronic Payment](http://www.sep.ir/en/).
 
 ## Install
