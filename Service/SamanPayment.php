@@ -322,6 +322,8 @@ class SamanPayment
 			'data' => $this->paymentId
 		])->add('redirectUrl', HiddenType::class, [
 			'data' => $this->redirectUrl
+		])->add('amount', HiddenType::class, [
+			'data' => $this->totalAmount * $this->bankRate
 		]);
 		return $form;
 	}
