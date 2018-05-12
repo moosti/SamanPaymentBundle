@@ -1,50 +1,98 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: mosi
- * Date: 3/21/18
- * Time: 1:56 AM
- */
 
 namespace EricomGroup\SamanPaymentBundle\Service;
 
-
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
+/**
+ * Class SamanPayment
+ * @package EricomGroup\SamanPaymentBundle\Service
+ */
 class SamanPayment
 {
-	const FORM_ACTION  = 'https://sep.shaparak.ir/Payment.aspx';
-	const WEB_METHOD_URL = 'https://verify.sep.ir/Payments/ReferencePayment.asmx?wsdl';
-	private $configs;
-	private $merchantId;
-	private $password;
-	private $bankRate;
-	private $isAutoSubmit = false;
-	private $submitText = 'پرداخت';
-	private $redirectUrl = '';
-	private $totalAmount;
-	private $paymentId;
-	private $transactionId;
-	public $errors;
-	private $stateErrors = [
-		'Canceled By User'     => 'تراکنش بوسیله خریدار کنسل شده',
-		'Invalid Amount'       => 'مبلغ سند برگشتی  از مبلغ تراکنش اصلی بیشتر است',
-		'Invalid Transaction'  => 'درخواست برگشت تراکنش رسیده است در حالی که تراکنش اصلی پیدا نمی شود',
-		'Invalid Card Number'  => 'شماره کارت اشتباه است',
-		'No Such Issuer'       => 'چنین صادر کننده کارتی وجود ندارد',
-		'Expired Card Pick Up' => 'از تاریخ انقضای کارت گذشته است',
-		'Incorrect PIN'        => 'رمز کارت اشتباه است pin',
-		'No Sufficient Funds'  => 'موجودی به اندازه کافی در حساب شما نیست',
-		'Issuer Down Slm'      => 'سیستم کارت بنک صادر کننده فعال نیست',
-		'TME Error'            => 'خطا در شبکه بانکی',
-		'Exceeds Withdrawal Amount Limit'      => 'مبلغ بیش از سقف برداشت است',
-		'Transaction Cannot Be Completed'      => 'امکان سند خوردن وجود ندارد',
-		'Allowable PIN Tries Exceeded Pick Up' => 'رمز کارت 3 مرتبه اشتباه وارد شده کارت شما غیر فعال اخواهد شد',
-		'Response Received Too Late'           => 'تراکنش در شبکه بانکی تایم اوت خورده',
-		'Suspected Fraud Pick Up'              => 'اشتباه وارد شده cvv2 ویا ExpDate فیلدهای'
-	];
+    const FORM_ACTION  = 'https://sep.shaparak.ir/Payment.aspx';
+    const WEB_METHOD_URL = 'https://verify.sep.ir/Payments/ReferencePayment.asmx?wsdl';
 
-	private $verifyErrors = [
+    /**
+     * @var mixed
+     */
+    private $config;
+
+    /**
+     * @var
+     */
+    private $merchantId;
+
+    /**
+     * @var
+     */
+    private $password;
+
+    /**
+     * @var int
+     */
+    private $bankRate;
+
+    /**
+     * @var bool
+     */
+    private $isAutoSubmit = false;
+
+    /**
+     * @var string
+     */
+    private $submitText = 'پرداخت';
+
+    /**
+     * @var string
+     */
+    private $redirectUrl = '';
+
+    /**
+     * @var
+     */
+    private $totalAmount;
+
+    /**
+     * @var
+     */
+    private $paymentId;
+
+    /**
+     * @var
+     */
+    private $transactionId;
+
+    /**
+     * @var
+     */
+    public $errors;
+
+    /**
+     * @var array
+     */
+    private $stateErrors = [
+        'Canceled By User' => 'تراکنش بوسیله خریدار کنسل شده',
+        'Invalid Amount' => 'مبلغ سند برگشتی  از مبلغ تراکنش اصلی بیشتر است',
+        'Invalid Transaction' => 'درخواست برگشت تراکنش رسیده است در حالی که تراکنش اصلی پیدا نمی شود',
+        'Invalid Card Number' => 'شماره کارت اشتباه است',
+        'No Such Issuer' => 'چنین صادر کننده کارتی وجود ندارد',
+        'Expired Card Pick Up' => 'از تاریخ انقضای کارت گذشته است',
+        'Incorrect PIN' => 'رمز کارت اشتباه است pin',
+        'No Sufficient Funds' => 'موجودی به اندازه کافی در حساب شما نیست',
+        'Issuer Down Slm' => 'سیستم کارت بنک صادر کننده فعال نیست',
+        'TME Error' => 'خطا در شبکه بانکی',
+        'Exceeds Withdrawal Amount Limit' => 'مبلغ بیش از سقف برداشت است',
+        'Transaction Cannot Be Completed' => 'امکان سند خوردن وجود ندارد',
+        'Allowable PIN Tries Exceeded Pick Up' => 'رمز کارت 3 مرتبه اشتباه وارد شده کارت شما غیر فعال اخواهد شد',
+        'Response Received Too Late' => 'تراکنش در شبکه بانکی تایم اوت خورده',
+        'Suspected Fraud Pick Up' => 'اشتباه وارد شده cvv2 ویا ExpDate فیلدهای'
+    ];
+
+    /**
+     * @var array
+     */
+    private $verifyErrors = [
 		'-1'  => 'خطای داخلی شبکه',
 		'-2'  => 'سپرده ها برابر نیستند',
 		'-3'  => 'ورودی ها حاوی کاراکترهای غیر مجاز میباشد',
@@ -64,11 +112,23 @@ class SamanPayment
 		'-17' => 'برگشت زدن تراکنشی که با کارت بانکی غیر از بانک سامان انجام شده',
 		'-18' => 'فروشنده نامعتبر است ip address'
 	];
-
-	public function __construct(ContainerInterface $container)
+    /**
+     * SamanPayment constructor.
+     * @param ContainerInterface $container
+     */
+    public function __construct(ContainerInterface $container)
 	{
-//		$configs = $container->getParameter('saman_payment.config');
+		$this->config = $container->getParameter('saman_payment.config');
 		$this->bankRate = 1;
+
+		if(in_array('merchant_id', $this->config))
+        {
+            $this->setMerchantId($this->config['merchant_id']);
+        }
+        if(in_array('password', $this->config))
+        {
+            $this->setMerchantId($this->config['password']);
+        }
 	}
 
 	/**
@@ -224,7 +284,10 @@ class SamanPayment
 		return $result;
 	}
 
-	public function getFormParam()
+    /**
+     * @return array
+     */
+    public function getFormParam()
 	{
 		return [
 			'merchantId' => $this->merchantId,

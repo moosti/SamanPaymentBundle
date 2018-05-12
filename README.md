@@ -1,8 +1,5 @@
 SamanPaymentBundle
 ===================
-[![Packagist](https://img.shields.io/packagist/dt/doctrine/orm.svg)](https://packagist.org/packages/ericomgroup/telegram-bot-api-bundle)
-[![license](https://img.shields.io/github/license/mashape/apistatus.svg)](https://github.com/ericomgroup/TelegramBotApiBundle/blob/master/LICENSE.md)
-
 A symfony wrapper bundle for  [Saman Electeronic Payment](http://www.sep.ir/en/).
 
 ## Install
@@ -13,7 +10,7 @@ Via Composer
 composer require ericomgroup/saman-payment-bundle
 ```
 
-Edit your app/AppKernel.php to register the bundle in the registerBundles() method as above:
+Edit your app/AppKernel.php to register the bundle in the registerBundles() method as above if you haven't symfony flex:
 
 
 ```php
