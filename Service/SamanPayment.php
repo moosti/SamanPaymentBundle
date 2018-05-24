@@ -1,7 +1,10 @@
 <?php
+
 namespace EricomGroup\SamanPaymentBundle\Service;
 
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\Form\Extension\Core\Type\FormType;
+use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 
 /**
  * Class SamanPayment
@@ -12,6 +15,10 @@ class SamanPayment
     const FORM_ACTION  = 'https://sep.shaparak.ir/Payment.aspx';
     const WEB_METHOD_URL = 'https://verify.sep.ir/Payments/ReferencePayment.asmx?wsdl';
 
+	/**
+	 * @var
+	 */
+	private $container;
     /**
      * @var mixed
      */
@@ -111,13 +118,13 @@ class SamanPayment
 		'-17' => 'برگشت زدن تراکنشی که با کارت بانکی غیر از بانک سامان انجام شده',
 		'-18' => 'فروشنده نامعتبر است ip address'
 	];
-
     /**
      * SamanPayment constructor.
      * @param ContainerInterface $container
      */
     public function __construct(ContainerInterface $container)
 	{
+		$this->container = $container;
 		$this->config = $container->getParameter('saman_payment.config');
 		$this->bankRate = 1;
 
@@ -298,5 +305,27 @@ class SamanPayment
 			'autoSubmit' => $this->isAutoSubmit,
 			'submitText' => $this->submitText
 		];
+	}
+
+	/**
+	 * @return \Symfony\Component\Form\FormBuilderInterface
+	 */
+	public function getForm()
+	{
+		$form = $this->container->get('form.factory')->createNamedBuilder(null, FormType::class, null, [
+			'action' => SamanPayment::FORM_ACTION,
+			'csrf_protection' => false,
+			'method' => 'post'
+		])->add('merchantId', HiddenType::class, [
+			'data' => $this->merchantId
+		])->add('resNum', HiddenType::class, [
+			'data' => $this->paymentId
+		])->add('redirectUrl', HiddenType::class, [
+			'data' => $this->redirectUrl
+		])->add('amount', HiddenType::class, [
+			'data' => $this->totalAmount * $this->bankRate
+		])->getForm();
+
+		return $form->createView();
 	}
 }
