@@ -134,7 +134,7 @@ class SamanPayment
         }
         if(isset($this->config['password']))
         {
-            $this->setMerchantId($this->config['password']);
+            $this->setPassword($this->config['password']);
         }
 	}
 
