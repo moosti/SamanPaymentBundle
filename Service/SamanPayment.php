@@ -128,12 +128,10 @@ class SamanPayment
 		$this->config = $container->getParameter('saman_payment.config');
 		$this->bankRate = 1;
 
-	if(isset($this->config['merchant_id']))
-        {
+	if(isset($this->config['merchant_id'])) {
             $this->setMerchantId($this->config['merchant_id']);
         }
-        if(isset($this->config['password']))
-        {
+        if(isset($this->config['password'])) {
             $this->setPassword($this->config['password']);
         }
 	}
